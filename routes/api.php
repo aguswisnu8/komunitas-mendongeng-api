@@ -27,6 +27,7 @@ Route::get('kontens', [KontenController::class, 'all']);
 Route::get('mendongengs', [MendongengController::class, 'all']);
 Route::get('undangans', [UndanganController::class, 'all']);
 Route::get('partisipans', [PartisipanController::class, 'all']);
+Route::get('users', [UserController::class, 'getUsers']);
 
 
 Route::post('register', [UserController::class, 'register']);
@@ -43,7 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // operasi untuk admin terhadap tabel user
-    Route::get('users', [UserController::class, 'getUsers']);
     Route::post('users/{id}', [UserController::class, 'updateUser']);
     Route::delete('users/{id}', [UserController::class, 'deleteUser']);
 

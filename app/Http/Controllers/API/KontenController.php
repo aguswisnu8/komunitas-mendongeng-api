@@ -61,15 +61,16 @@ class KontenController extends Controller
 
     public function test(Request $request)
     {
-        $jenis = $request->input('jenis');
-        $konten = DB::table('users')
-            ->join('kontens', 'users.id', '=', 'kontens.user_id')
-            ->select('kontens.*', 'users.name')
-            ->get();
-        if ($jenis) {
-            $konten->where('jenis', '=', $jenis);
-        }
-        return response()->json(['message' => 'Success', 'data' => $konten]);
+        // $jenis = $request->input('jenis');
+        // $konten = DB::table('users')
+        //     ->join('kontens', 'users.id', '=', 'kontens.user_id')
+        //     ->select('kontens.*', 'users.name')
+        //     ->get();
+        // if ($jenis) {
+        //     $konten->where('jenis', '=', $jenis);
+        // }
+        // return response()->json(['message' => 'Success', 'data' => $konten]);
+        return response()->json(['message' => 'Api TEst Success']);
     }
 
     public function store(Request $request)
