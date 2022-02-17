@@ -21,7 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('test', [KontenController::class, 'test']);
+Route::post('test', [KontenController::class, 'test']);
 
+Route::post('ptest', [PartisipanController::class, 'test']);
 
 Route::get('kontens', [KontenController::class, 'all']);
 Route::get('mendongengs', [MendongengController::class, 'all']);
@@ -66,6 +68,5 @@ Route::middleware('auth:sanctum')->group(function () {
     // partisipan
     Route::post('partisipans', [PartisipanController::class, 'store']);
     Route::post('partisipans/{id}', [PartisipanController::class, 'update']);
-    Route::post('ptest', [PartisipanController::class, 'test']);
     Route::delete('partisipans/{id}', [PartisipanController::class, 'delete']);
 });

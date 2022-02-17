@@ -70,7 +70,17 @@ class KontenController extends Controller
         //     $konten->where('jenis', '=', $jenis);
         // }
         // return response()->json(['message' => 'Success', 'data' => $konten]);
-        return response()->json(['message' => 'Api TEst Success']);
+        // return response()->json(['message' => 'Api TEst Success']);
+            // test image
+        try {
+            //code...
+
+            $pathFile = $request->file('gambar')->store('public/test');
+            return response()->json(['message' => 'image Upload Success', 'path'=>$pathFile]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['message' => 'image Upload Gagal']);
+        }
     }
 
     public function store(Request $request)
@@ -113,7 +123,7 @@ class KontenController extends Controller
     {
         try {
             $request->validate([
-                'judul' => ['nullable', 'string', 'max:255'],
+                'judul' => ['nullable', 'string'],
                 'gambar' => ['nullable'],
                 'link' => ['nullable', 'url'],
                 'deskripsi' => ['nullable'],

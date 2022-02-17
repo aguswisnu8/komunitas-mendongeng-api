@@ -53,7 +53,8 @@ class PartisipanController extends Controller
             //code...
             $request->validate([
                 'peran' => ['required'],
-                'mendongeng_id' => ['required', 'integer']
+                'mendongeng_id' => ['required', 'integer'],
+                'st_req' => ['nullable', 'integer'],
             ]);
             $checkPartisipan = Partisipan::where([
                 ['user_id', '=', Auth::user()->id],
@@ -65,6 +66,20 @@ class PartisipanController extends Controller
                     null,
                     'User sudah terdata'
                 );
+            }
+            if ($request->peran == 'pendongeng') {
+                # code...
+                $checkJumlahPendongeng = Partisipan::where([
+                    ['peran', '=', $request->peran],
+                    ['mendongeng_id', '=', $request->mendongeng_id],
+                ])->get();
+                if (count($checkJumlahPendongeng) >= $request->st_req) {
+                    # code...
+                    return ResponseFormatter::error(
+                        null,
+                        'Jumlah Pendongeng Sudah Penuh'
+                    );
+                }
             }
             $partisipan = Partisipan::create([
                 'user_id' => Auth::user()->id,
@@ -131,18 +146,47 @@ class PartisipanController extends Controller
         // }
 
         // return response()->json(['pesan' => 'berhasil', 'data' => count($checkPartisipan) == 0]);
-
-
+        // -----------------------------------------------------------------------------
         try {
             //code...
-            $partisipan = Partisipan::where([
-                ['user_id', '=', Auth::user()->id],
+            // $partisipan = Partisipan::where([
+            //     ['user_id', '=', Auth::user()->id],
+            // ]);
+            // $partisipan->delete();
+            // ------------------------
+
+            $request->validate([
+                'peran' => ['required'],
+                'mendongeng_id' => ['required', 'integer'],
+                'st_req' => ['nullable', 'integer'],
             ]);
-            $partisipan->delete();
-            return response()->json(['pesan' => 'berhasil', 'data' => $partisipan->paginate(10)]);
+            $checkPartisipan = Partisipan::where([
+                ['peran', '=', $request->peran],
+                ['mendongeng_id', '=', $request->mendongeng_id],
+            ])->get();
+            if ($request->peran == 'pendongeng') {
+                # code...
+                $checkJumlahPendongeng = Partisipan::where([
+                    ['peran', '=', $request->peran],
+                    ['mendongeng_id', '=', $request->mendongeng_id],
+                ])->get();
+                if (count($checkJumlahPendongeng) >= $request->st_req) {
+                    # code...
+                    return ResponseFormatter::error(
+                        null,
+                        'Jumlah Pendongeng Sudah Penuh'
+                    );
+                }
+            }
+            return response()->json(['pesan' => 'berhasil', 'data' => 'mendongeng id: ' . $request->mendongeng_id . ' | peran: ' . $request->peran . ' | jumlah pendongeng: ' . $request->st_req . ' | jumlah saat ini: ' . count($checkJumlahPendongeng)]);
+
+
+            // return response()->json(['pesan' => 'berhasil', 'data' => $partisipan->paginate(10)]);
+
         } catch (Exception $error) {
             //throw $th;
-            return response()->json(['pesan' => 'gagal', 'data' => $partisipan->paginate(10), 'error' => $error]);
+            // return response()->json(['pesan' => 'gagal', 'data' => $partisipan->paginate(10), 'error' => $error]);
+            return response()->json(['pesan' => 'gagal']);
         }
     }
 }
