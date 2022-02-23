@@ -24,6 +24,8 @@ Route::get('test', [KontenController::class, 'test']);
 Route::post('test', [KontenController::class, 'test']);
 
 Route::post('ptest', [PartisipanController::class, 'test']);
+Route::post('ptest2', [PartisipanController::class, 'test2']);
+Route::post('ptest3', [PartisipanController::class, 'test3']);
 
 Route::get('kontens', [KontenController::class, 'all']);
 Route::get('mendongengs', [MendongengController::class, 'all']);

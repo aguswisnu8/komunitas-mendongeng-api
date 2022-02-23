@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Http;
 
 class MendongengController extends Controller
 {
@@ -93,9 +94,24 @@ class MendongengController extends Controller
                 'st_req' => $request->st_req,
             ]);
 
+            $response = Http::withHeaders([
+                'Authorization' => 'key=AAAAwBf21ds:APA91bE1aXaygXKQlXnNSl0kFC_FetRdKdiupCR3wO1nmSEy3Lq3mzfz2xEpdhrBh8csQrWBkmEhsTNnVWWBXVTd4Sj_b7bbGXX9KkblRYUmJnNoc5xzwAHPp1jvXATZmzu-qkoXjBIs',
+                'Content-Type' => 'application/json'
+            ])->post('https://fcm.googleapis.com/fcm/send', [
+                "to" => "/topics/mendongeng",
+                "collapse_key" => "type_a",
+                "notification" => [
+                    "body" => $request->tgl . ' - ' .  $request->name,
+                    "title" => "Kegiatan Mendongeng Baru - Bali Mendongeng",
+                    "android_channel_id" => "high_importance_channel"
+                ],
+            ]);
+
+
+
             return ResponseFormatter::success(
                 $mendongeng,
-                'Berhasil Menambahkan Kegiatan Mendongeng Baru'
+                'Berhasil Menambahkan Kegiatan Mendongeng Baru' . ' Notif ' . $response->status()
             );
         } catch (Exception $error) {
             return ResponseFormatter::error([

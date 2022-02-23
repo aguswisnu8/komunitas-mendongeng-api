@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class KontenController extends Controller
 {
@@ -71,12 +72,12 @@ class KontenController extends Controller
         // }
         // return response()->json(['message' => 'Success', 'data' => $konten]);
         // return response()->json(['message' => 'Api TEst Success']);
-            // test image
+        // test image
         try {
             //code...
 
             $pathFile = $request->file('gambar')->store('public/test');
-            return response()->json(['message' => 'image Upload Success', 'path'=>$pathFile]);
+            return response()->json(['message' => 'image Upload Success', 'path' => $pathFile]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['message' => 'image Upload Gagal']);
@@ -107,9 +108,22 @@ class KontenController extends Controller
                 'user_id' => Auth::user()->id,
             ]);
 
+            $response = Http::withHeaders([
+                'Authorization' => 'key=AAAAwBf21ds:APA91bE1aXaygXKQlXnNSl0kFC_FetRdKdiupCR3wO1nmSEy3Lq3mzfz2xEpdhrBh8csQrWBkmEhsTNnVWWBXVTd4Sj_b7bbGXX9KkblRYUmJnNoc5xzwAHPp1jvXATZmzu-qkoXjBIs',
+                'Content-Type' => 'application/json'
+            ])->post('https://fcm.googleapis.com/fcm/send', [
+                "to" => "/topics/mendongeng",
+                "collapse_key" => "type_a",
+                "notification" => [
+                    "body" => $request->jenis . ' dongeng | ' .  $request->judul,
+                    "title" => "Konten Baru - Bali Mendongeng",
+                    "android_channel_id" => "high_importance_channel"
+                ],
+            ]);
+
             return ResponseFormatter::success(
                 $konten,
-                'Berhasil Menambahkan Konten Baru'
+                'Berhasil Menambahkan Konten Baru' . ' Notif ' . $response->status()
             );
         } catch (Exception $error) {
             return ResponseFormatter::error([
