@@ -64,7 +64,7 @@ class UserController extends Controller
                 # code...
                 return ResponseFormatter::error(
                     [
-                        'message' => 'Login Gagal',
+                        'message' => !Auth::attempt($credentials),
                     ],
                     'Login Gagal',
                     500,
