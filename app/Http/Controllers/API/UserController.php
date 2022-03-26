@@ -64,7 +64,7 @@ class UserController extends Controller
                 # code...
                 return ResponseFormatter::error(
                     [
-                        'message' => 'user tidak terdaftar',
+                        'message' => 'Login Gagal',
                     ],
                     'Login Gagal',
                     500,
