@@ -4,7 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Mendongeng;
 use App\Models\Partisipan;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -246,22 +248,33 @@ class PartisipanController extends Controller
         try {
             //code...
             // String  = "konten baru";
-            $response = Http::withHeaders([
-                'Authorization' => 'key=AAAAwBf21ds:APA91bE1aXaygXKQlXnNSl0kFC_FetRdKdiupCR3wO1nmSEy3Lq3mzfz2xEpdhrBh8csQrWBkmEhsTNnVWWBXVTd4Sj_b7bbGXX9KkblRYUmJnNoc5xzwAHPp1jvXATZmzu-qkoXjBIs',
-                'Content-Type' => 'application/json'
-            ])->post('https://fcm.googleapis.com/fcm/send', [
-                "to" => "/topics/konten",
-                "collapse_key" => "type_a",
-                "notification" => [
-                    // "body" => "Konten Baru - " + $request->judul,
-                    "body" => "Konten Baru - ",
-                    "title" => "Komunitas Bali Mendongeng"
+            // $response = Http::withHeaders([
+            //     'Authorization' => 'key=AAAAwBf21ds:APA91bE1aXaygXKQlXnNSl0kFC_FetRdKdiupCR3wO1nmSEy3Lq3mzfz2xEpdhrBh8csQrWBkmEhsTNnVWWBXVTd4Sj_b7bbGXX9KkblRYUmJnNoc5xzwAHPp1jvXATZmzu-qkoXjBIs',
+            //     'Content-Type' => 'application/json'
+            // ])->post('https://fcm.googleapis.com/fcm/send', [
+            //     "to" => "/topics/konten",
+            //     "collapse_key" => "type_a",
+            //     "notification" => [
+            //         // "body" => "Konten Baru - " + $request->judul,
+            //         "body" => "Konten Baru - ",
+            //         "title" => "Komunitas Bali Mendongeng"
 
-                ],
+            //     ],
 
-            ]);
+            // ]);
 
-            return response()->json(['pesan' => 'berhasil', 'data' =>  $response->body() . ' | ' . $request->a]);
+            $date = Carbon::tomorrow()->toDateString();
+            $mendongeng = Mendongeng::where([
+                ['tgl', '=', '2022-03-22'],
+            ])->first();
+            
+            // $mendongeng = Mendongeng::find('1');
+            // $s = $mendongeng->name;
+
+            // return response()->json(['pesan' => 'berhasil', 'data' =>  $response->body() . ' | ' . $request->a]);
+            // return response()->json(['schedule'=>$date.' Mendongeng']);
+            // return response()->json(['schedule' => $s]);
+            return response()->json(['schedule' => $mendongeng->name]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json(['pesan' => 'gagal', 'data' => $th]);

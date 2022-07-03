@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Http\Controllers\API\MendongengController;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +17,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // $schedule->call(
+        //     function () {
+        //         info('test schedule');
+        //     }
+        //     // )->everyMinute()->timezone('Asia/Jakarta');
+        // )->dailyAt('20:34')->timezone('Asia/Jakarta');
+        $schedule->call('App\Http\Controllers\API\MendongengController@scheduleTest')->everyMinute();
+        // $schedule->call('App\Http\Controllers\API\MendongengController@scheduleTest')->dailyAt('11:00')->timezone('Asia/Jakarta');
     }
 
     /**
@@ -25,7 +34,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

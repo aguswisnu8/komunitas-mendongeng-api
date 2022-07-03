@@ -179,9 +179,22 @@ class MendongengController extends Controller
             }
             $mendongeng->update();
 
+            $response = Http::withHeaders([
+                'Authorization' => 'key=AAAAwBf21ds:APA91bE1aXaygXKQlXnNSl0kFC_FetRdKdiupCR3wO1nmSEy3Lq3mzfz2xEpdhrBh8csQrWBkmEhsTNnVWWBXVTd4Sj_b7bbGXX9KkblRYUmJnNoc5xzwAHPp1jvXATZmzu-qkoXjBIs',
+                'Content-Type' => 'application/json'
+            ])->post('https://fcm.googleapis.com/fcm/send', [
+                "to" => "/topics/mendongeng",
+                "collapse_key" => "type_a",
+                "notification" => [
+                    "body" => $mendongeng->tgl . ' - ' .  $mendongeng->name,
+                    "title" => "Update Kegiatan",
+                    "android_channel_id" => "high_importance_channel"
+                ],
+            ]);
+
             return ResponseFormatter::success(
                 $mendongeng,
-                'Update Data Kegiatan Mendongeng Berhasil'
+                'Update Data Kegiatan Mendongeng Berhasil' . ' Notif ' . $response->status()
             );
         } catch (Exception $error) {
             return ResponseFormatter::error(
@@ -214,6 +227,36 @@ class MendongengController extends Controller
                 'Kegiatan Mendongeng Gagal Dihapus',
                 500,
             );
+        }
+    }
+
+    public function scheduleTest()
+    {
+        // $date = Carbon::now()->toDateString();
+        $date = Carbon::tomorrow()->toDateString();
+        $mendongeng = Mendongeng::where([
+            ['tgl', '=', $date],
+        ])->first();
+        if ($mendongeng == '') {
+            # code...
+            info('test schedule from controller -' . $date . ' Mendongeng = Kosong');
+        } else {
+            # code...
+            $response = Http::withHeaders([
+                'Authorization' => 'key=AAAAwBf21ds:APA91bE1aXaygXKQlXnNSl0kFC_FetRdKdiupCR3wO1nmSEy3Lq3mzfz2xEpdhrBh8csQrWBkmEhsTNnVWWBXVTd4Sj_b7bbGXX9KkblRYUmJnNoc5xzwAHPp1jvXATZmzu-qkoXjBIs',
+                'Content-Type' => 'application/json'
+            ])->post('https://fcm.googleapis.com/fcm/send', [
+                "to" => "/topics/mendongeng",
+                "collapse_key" => "type_a",
+                "notification" => [
+                    "body" => $mendongeng->tgl . ' - ' .  $mendongeng->name,
+                    "title" => "Reminder Mendongeng Keliling",
+                    "android_channel_id" => "high_importance_channel"
+                ],
+            ]);
+
+            // info('test schedule from controller -' . $date . ' Mendongeng = ' . $mendongeng);
+            info('test schedule from controller -' . $date . ' Notif Status = ' . $response->status());
         }
     }
 }
